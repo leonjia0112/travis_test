@@ -1,8 +1,13 @@
 fn main() {
     use std::fs::File;
 
-    let f = File::open("panic-test.sh").unwrap();
-
+    let f = match File::open("panic-test.sh") {
+        Ok(f) => f,
+        Err(e) => {
+            eprintln!("errro {}", e);
+            return;
+        }
+    };
 }
 
 fn echo(s: &str) {

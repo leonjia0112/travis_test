@@ -8,17 +8,19 @@ output=""
 panic_line=0
 
 for i in src/*; do
-    tmp_output=$(sed '/Unit Testing/q' $i | grep -n -e unwrap -e panic)
-    output="${output}\n${tmp_output}"
-    line=$(echo $tmp_output | awk 'END {print NR}')
-    panic_line=$(($panic_line+$line))
+    tmp_line=$(sed '/Unit Testing/q' $i | grep -e "unwrap()" -e "panic!(.*)" | awk 'END {print NR}')
+    if [ "$tmp_line" -gt 0 ]; then
+        tmp_output=$(sed '/Unit Testing/q' $i | grep -n -e "unwrap()" -e "panic!(.*)")
+        output="$src/$i${output}\n${tmp_output}\n"
+        panic_line=$(($panic_line+$tmp_line))
+    else
+        echo "All clear !"
+    fi
 done
-
-printf "This output has %d lines.\n" "$panic_line"
-# printf "$output"
 
 if [ "$panic_line" -gt 0 ]
 then
+    echo "exit 1. Please removed all the following panic calls."
     printf "$output"
     exit 1
 else
