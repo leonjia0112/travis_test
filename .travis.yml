@@ -3,3 +3,4 @@ language: rust
 script:
     - cargo build
     - cargo test
+    - bash panic-test.sh 
