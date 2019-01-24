@@ -3,4 +3,4 @@ language: rust
 script:
     - cargo build
     - cargo test
-    - bash panic-test.sh 
+    - bash panic-test.sh banned_function.txt
